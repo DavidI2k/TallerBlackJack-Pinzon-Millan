@@ -20,3 +20,22 @@ class Card:
         elif self.cost == 1:
             return 11
         return self.cost
+class Dealer:
+    def __init__(self):
+        self.deck = []
+
+    def generate(self):
+        for i in range(1, 14):
+            for j in range(4):
+                self.deck.append(Card(i, j))
+    
+    def Randomize(self, iteration):
+        deck = []
+        for i in range(iteration):
+            card = random.choice(self.deck)
+            self.deck.remove(card)
+            deck.append(card)
+        return deck
+
+    def count(self):
+        return len(self.deck)
