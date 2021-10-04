@@ -10,8 +10,14 @@ ventana.title("Black Jack")
 ventana.geometry("640x480")
 ventana.configure(bg="green")
 
-
-
+cont_dealer = 0
+cont_jugador = 0
+global PGdlr
+global PGjgd
+PGdlr = Label(ventana,text=cont_dealer)
+PGjgd = Label(ventana,text=cont_jugador)
+PGdlr.grid(row= 0, column=1)
+PGjgd.grid(row=1, column=1)
 
 import random
 class Card:
@@ -116,11 +122,12 @@ class Juego:
         self.BotonM.grid(row=0,column=0)
         self.BotonP.grid(row=1,column=0)
         self.botonN.grid(row=2,column=0)
+
     
 
     def Pida(self):
-
-
+        global cont_jugador
+        global cont_dealer
 
 
         self.player.AddCard()
@@ -130,41 +137,56 @@ class Juego:
 
 
         if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
-            print("¡Es un empate, mejor suerte la próxima!")
+            print("El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.player.mirar_puntaje() == 21:
             print("¡El jugador gana, felicidades!")
+            cont_jugador += 1
         elif self.dealer.mirar_puntaje() == 21:
             print("¡El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje() and self.player.mirar_puntaje() > 21:
             print("¡El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje() and self.dealer.mirar_puntaje() > 21:
             print("¡El jugador gana, felicidades!")
+            cont_jugador += 1
 
         
     def Mantenga(self):
+        global cont_dealer
+        global cont_jugador
+
         d_status = self.dealer.deal()
         print("\n")
         self.dealer.mostrar()
         if d_status == 1:
             print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
+            cont_dealer += 1
             return 1
         while self.dealer.mirar_puntaje() < 17:
             if self.dealer.AddCard() == 1:
                 self.dealer.mostrar()
                 print("¡El Dealer se pasó. Felicidades!")
+                cont_jugador += 1
                 return 1
             self.dealer.mostrar()
 
         if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
-            print("¡Es un empate, mejor suerte la próxima!")
+            print("El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.player.mirar_puntaje() == 21:
             print("¡El jugador gana, felicidades!")
+            cont_jugador += 1
         elif self.dealer.mirar_puntaje() == 21:
             print("¡El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje() and self.player.mirar_puntaje() > 21:
             print("¡El repartidor gana, buen juego!")
+            cont_dealer += 1
         elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje() and self.dealer.mirar_puntaje() > 21:
             print("¡El jugador gana, felicidades!")
+            cont_jugador += 1
 
     def play(self):
         p_status = self.player.deal()
@@ -174,6 +196,7 @@ class Juego:
 
         if p_status == 1:
             print("¡El jugador obtuvo Blackjack, Felicidades!")
+            cont_jugador += 1
             if d_status == 1:
                 print("¡El jugador y el Dealer obtuvieron Blackjack! Es un empate.")
             return 1
@@ -181,11 +204,14 @@ class Juego:
         self.dealer.mostrar()
         if d_status == 1:
             print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
+            cont_dealer += 1
             return 1
 
 
 
     def Nuevo(self):
+        PGdlr.config(text=cont_dealer)
+        PGjgd.config(text=cont_jugador)
         python = sys.executable
         os.execl(python,python, * sys.argv)
 
