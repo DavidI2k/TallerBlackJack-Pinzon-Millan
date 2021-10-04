@@ -1,3 +1,22 @@
+from ctypes import alignment
+from tkinter import *
+import tkinter
+import sys
+import os
+
+ventana = Tk()
+ventana.title("Black Jack")
+ventana.geometry("640x480")
+ventana.configure(bg="green")
+
+ventana.columnconfigure(0, weight=2)
+ventana.columnconfigure(1, weight=2)
+ventana.columnconfigure(2, weight=2)
+ventana.columnconfigure(3, weight=0)
+ventana.columnconfigure(4, weight=5)
+ventana.columnconfigure(5, weight=0)
+
+
 import random
 class Card:
     def __init__(self,symbol,suit):
@@ -20,6 +39,9 @@ class Card:
         elif self.cost == 1:
             return 11
         return self.cost
+
+
+
 
 class Dealer:
     def __init__(self):
@@ -87,35 +109,68 @@ class Player:
         print("Puntaje: " + str(self.score))
 
 class Juego:
-    def __init__(self):
+    def __init__(self,master):
         self.cards = Dealer()
         self.cards.generate()
         self.player = Player(False, self.cards)
         self.dealer = Player(True, self.cards)
+        self.BotonM= Button(ventana,text="Mantener",command=self.Mantenga)
+        self.BotonP= Button(ventana,text="Pedir",command=self.Pida)
+        self.botonN= Button(ventana,text="Nuevo Juego",command=self.Nuevo)
+        self.BotonM.grid(row=0,column=0)
+        self.BotonP.grid(row=1,column=0)
+        self.botonN.grid(row=2,column=0)
 
-    def play(self):
+
+
+    def Pida(self):
         p_status = self.player.deal()
         d_status = self.dealer.deal()
 
         self.player.mostrar()
-
         if p_status == 1:
             print("¡El jugador obtuvo Blackjack, Felicidades!")
             if d_status == 1:
                 print("¡El jugador y el Dealer obtuvieron Blackjack! Es un empate.")
             return 1
 
-        cmd = ""
-        while cmd != "Mantener":
-            bust = 0
-            cmd = input("Pedir o Mantener? ")
+        bust = 0 
+        bust = self.player.AddCard()
+        self.player.mostrar()
+        if bust ==1:
+            print("El jugador se pasó. Buen Juego!")
+            return 1
+        print("\n")
+        self.dealer.mostrar()
+        if d_status == 1:
+            print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
+            return 1
 
-            if cmd == "Pedir":
-                bust = self.player.AddCard()
-                self.player.mostrar()
-            if bust == 1:
-                print("El jugador se pasó. Buen juego!")
+        while self.dealer.mirar_puntaje() < 17:
+            if self.dealer.AddCard() == 1:
+                self.dealer.mostrar()
+                print("¡El Dealer de pasó. Felicidades!")
                 return 1
+            self.dealer.mostrar()
+
+        if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
+            print("¡Es un empate, mejor suerte la próxima!")
+        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje():
+            print("¡El repartidor gana, buen juego!")
+        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
+            print("¡El jugador gana, felicidades!")
+        
+    def Mantenga(self):
+        p_status = self.player.deal()
+        d_status = self.dealer.deal()
+
+        self.player.mostrar()
+        if p_status == 1:
+            print("¡El jugador obtuvo Blackjack, Felicidades!")
+            if d_status == 1:
+                print("¡El jugador y el Dealer obtuvieron Blackjack! Es un empate.")
+            return 1
+
         print("\n")
         self.dealer.mostrar()
         if d_status == 1:
@@ -136,5 +191,12 @@ class Juego:
         elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
             print("¡El jugador gana, felicidades!")
 
-b = Juego()
-b.play()
+    def Nuevo(self):
+        python = sys.executable
+        os.execl(python,python, * sys.argv)
+
+
+
+b = Juego(ventana)
+
+ventana.mainloop()
