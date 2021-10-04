@@ -3,6 +3,7 @@ from tkinter import *
 import tkinter
 import sys
 import os
+from typing import Collection
 
 ventana = Tk()
 ventana.title("Black Jack")
@@ -68,7 +69,7 @@ class Player:
     def AddCard(self):
         self.deck.extend(self.cards.Randomize(1))
         self.mirar_puntaje()
-        if self.score > 21:
+        if self.score >= 21:
             return 1
         return 0
 
@@ -115,57 +116,38 @@ class Juego:
         self.BotonM.grid(row=0,column=0)
         self.BotonP.grid(row=1,column=0)
         self.botonN.grid(row=2,column=0)
-
-
+    
 
     def Pida(self):
-        p_status = self.player.deal()
-        d_status = self.dealer.deal()
 
+
+
+
+        self.player.AddCard()
         self.player.mostrar()
 
 
-        bust = 0 
-        bust = self.player.AddCard()
-        self.player.mostrar()
-        if bust ==1:
-            print("El jugador se pasó. Buen Juego!")
-            return 1
 
-        print("\n")
-        self.dealer.mostrar()
-        if d_status == 1:
-            print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
-            return 1
-
-        while self.dealer.mirar_puntaje() < 17:
-            if self.dealer.AddCard() == 1:
-                self.dealer.mostrar()
-                print("¡El Dealer se pasó. Felicidades!")
-                return 1
-            self.dealer.mostrar()
 
         if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
             print("¡Es un empate, mejor suerte la próxima!")
-        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje():
+        elif self.player.mirar_puntaje() == 21:
+            print("¡El jugador gana, felicidades!")
+        elif self.dealer.mirar_puntaje() == 21:
             print("¡El repartidor gana, buen juego!")
-        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
+        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje() and self.player.mirar_puntaje() > 21:
+            print("¡El repartidor gana, buen juego!")
+        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje() and self.dealer.mirar_puntaje() > 21:
             print("¡El jugador gana, felicidades!")
 
         
     def Mantenga(self):
-        p_status = self.player.deal()
         d_status = self.dealer.deal()
-
-
-
-
         print("\n")
         self.dealer.mostrar()
         if d_status == 1:
             print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
             return 1
-
         while self.dealer.mirar_puntaje() < 17:
             if self.dealer.AddCard() == 1:
                 self.dealer.mostrar()
@@ -175,10 +157,14 @@ class Juego:
 
         if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
             print("¡Es un empate, mejor suerte la próxima!")
-        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje():
-            print("¡El Jugador gana, Felicidades!")
-        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
-            print("¡El Repartidor gana, buen juego!")
+        elif self.player.mirar_puntaje() == 21:
+            print("¡El jugador gana, felicidades!")
+        elif self.dealer.mirar_puntaje() == 21:
+            print("¡El repartidor gana, buen juego!")
+        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje() and self.player.mirar_puntaje() > 21:
+            print("¡El repartidor gana, buen juego!")
+        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje() and self.dealer.mirar_puntaje() > 21:
+            print("¡El jugador gana, felicidades!")
 
     def play(self):
         p_status = self.player.deal()
