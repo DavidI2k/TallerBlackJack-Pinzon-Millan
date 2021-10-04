@@ -191,6 +191,49 @@ class Juego:
         elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
             print("¡El jugador gana, felicidades!")
 
+    def play(self):
+        p_status = self.player.deal()
+        d_status = self.dealer.deal()
+
+        self.player.mostrar()
+
+        if p_status == 1:
+            print("¡El jugador obtuvo Blackjack, Felicidades!")
+            if d_status == 1:
+                print("¡El jugador y el Dealer obtuvieron Blackjack! Es un empate.")
+            return 1
+
+        cmd = ""
+        while cmd != "Mantener":
+            bust = 0
+            cmd = input("Pedir o Mantener? ")
+
+            if cmd == "Pedir":
+                bust = self.player.AddCard()
+                self.player.mostrar()
+            if bust == 1:
+                print("El jugador se pasó. Buen juego!")
+                return 1
+        print("\n")
+        self.dealer.mostrar()
+        if d_status == 1:
+            print("¡El Dealer obtuvo Blackjack, mejor suerte la próxima!")
+            return 1
+
+        while self.dealer.mirar_puntaje() < 17:
+            if self.dealer.AddCard() == 1:
+                self.dealer.mostrar()
+                print("¡El Dealer de pasó. Felicidades!")
+                return 1
+            self.dealer.mostrar()
+
+        if self.dealer.mirar_puntaje() == self.player.mirar_puntaje():
+            print("¡Es un empate, mejor suerte la próxima!")
+        elif self.dealer.mirar_puntaje() > self.player.mirar_puntaje():
+            print("¡El repartidor gana, buen juego!")
+        elif self.dealer.mirar_puntaje() < self.player.mirar_puntaje():
+            print("¡El jugador gana, felicidades!")
+
     def Nuevo(self):
         python = sys.executable
         os.execl(python,python, * sys.argv)
@@ -198,5 +241,5 @@ class Juego:
 
 
 b = Juego(ventana)
-
+b.play()
 ventana.mainloop()
