@@ -3,11 +3,12 @@ from tkinter import *
 import tkinter
 import sys
 import os
+from tkinter import font
 from typing import Collection
 
 ventana = Tk()
 ventana.title("Black Jack")
-ventana.geometry("640x480")
+ventana.geometry("450x150")
 ventana.configure(bg="green")
 
 cont_dealer = 0
@@ -16,13 +17,13 @@ global PGdlr
 global PGjgd
 PGdlr = Label(ventana,text=cont_dealer)
 PGjgd = Label(ventana,text=cont_jugador)
-PGdlr.grid(row= 0, column=1)
-PGjgd.grid(row=1, column=1)
+PGdlr.grid(row= 2, column=1)
+PGjgd.grid(row=3, column=1)
 
 import random
 class Card:
     def __init__(self,symbol,suit):
-        self.cost=symbol
+        self.valor = symbol
         self.symbol = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'][symbol-1]
         self.suit = '♥♦♣♠'[suit]
 
@@ -36,11 +37,11 @@ class Card:
         print('└───────┘') 
 
     def puntaje(self):
-        if self.cost >= 10:
+        if self.valor >= 10:
             return 10
-        elif self.cost == 1:
+        elif self.valor == 1:
             return 11
-        return self.cost
+        return self.valor
 
 
 
@@ -116,12 +117,16 @@ class Juego:
         self.cards.generate()
         self.player = Player(False, self.cards)
         self.dealer = Player(True, self.cards)
-        self.BotonM= Button(ventana,text="Mantener",command=self.Mantenga)
-        self.BotonP= Button(ventana,text="Pedir",command=self.Pida)
-        self.botonN= Button(ventana,text="Nuevo Juego",command=self.Nuevo)
-        self.BotonM.grid(row=0,column=0)
-        self.BotonP.grid(row=1,column=0)
-        self.botonN.grid(row=2,column=0)
+        self.BotonM= Button(ventana,text="Mantener",command=self.Mantenga,borderwidth=4, )
+        self.BotonP= Button(ventana,text="Pedir",command=self.Pida,borderwidth=4)
+        self.botonN= Button(ventana,text="Nuevo Juego",command=self.Nuevo,borderwidth=4)
+        self.blank = Label(ventana, text="                                                  ", bg="green")
+        self.tit = Label(ventana,text="Bienvenido a BlackJack",font="Helvetica",bg="#27c471")
+        self.BotonM.grid(row=2,column=4)
+        self.BotonP.grid(row=3,column=4)
+        self.botonN.grid(row=4,column=4)
+        self.blank.grid(row=1,column=1)
+        self.tit.grid(row=0,column=4)
 
     
 
@@ -130,6 +135,8 @@ class Juego:
         global cont_dealer
 
 
+
+        print("\n")
         self.player.AddCard()
         self.player.mostrar()
 
@@ -189,6 +196,8 @@ class Juego:
             cont_jugador += 1
 
     def play(self):
+        global cont_dealer
+        global cont_jugador
         p_status = self.player.deal()
         d_status = self.dealer.deal()
 
@@ -210,10 +219,11 @@ class Juego:
 
 
     def Nuevo(self):
-        PGdlr.config(text=cont_dealer)
-        PGjgd.config(text=cont_jugador)
+        global cont_dealer
+        global cont_jugador
         python = sys.executable
         os.execl(python,python, * sys.argv)
+        
 
 
 
